@@ -5,7 +5,10 @@ defmodule Smoothixir do
 
   def start() do
     Smoothixir.get_smoothies_recipe()
+     |> Smoothixir.store_data()
      |> Smoothixir.display_smoothies()
+
+
   end
 
   def get_smoothies_url() do
@@ -125,26 +128,22 @@ defmodule Smoothixir do
     {:ok, smoothies}
   end
 
-  @doc """
-  Simple function that displays smoothies in a nice way in the console.
-  ## Examples
-    iex> Smoothixir.get_smoothies_recipe() |> Smoothixir.display_smoothies()
-    Triple Threat Fruit Smoothie
-    1 kiwi, sliced1 banana, peeled and chopped1/2 cup blueberries1 cup strawberries1 cup ice cubes1/2 cup orange juice1 (8 ounce) container peach yogurt
-    In a blender, blend the kiwi, banana, blueberries, strawberries, ice, orange juice, and yogurt until smooth.
-    +++++++++++++++++++++++++++++
-    Groovie Smoothie
-    2 small bananas, broken into chunks1 cup frozen unsweetened strawberries1 (8 ounce) container vanilla low-fat yogurt3/4 cup milk
-    In a blender, combine bananas, frozen strawberries, yogurt and milk. Blend until smooth. Pour into glasses and serve.
-  """
+
   def display_smoothies({_, smoothies}) do
     smoothies
+    #|> Enum.each(fn s -> ResultStore.add(s) end)
     |> Enum.map(fn s ->
       IO.puts(s.name)
       IO.puts(s.ingredients)
       IO.puts(s.directions)
       IO.puts("+++++++++++++++++++++++++++++")
     end)
+  end
+
+  def store_data({_, smoothies}) do
+    smoothies
+    |> Enum.each(fn s -> ResultStore.add(s) end)
+    {:ok, smoothies}
   end
 
   @doc """

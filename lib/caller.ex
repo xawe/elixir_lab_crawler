@@ -11,44 +11,23 @@ defmodule Caller do
     DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-  @spec handle_call(:t1, any, []) :: {:reply, <<_::88>>}
-  def handle_call(:t1, _from, _state) do
-    {:reply, "Hello teste", [:ok]}
-  end
-
-  def handle_call(:queue, _from, _state) do
-
-    {:reply, "jhg", :ok}
-  end
-
-  def handle_cast({:test, value}) do
-
-    data = 1..10_000_000
-    |> Enum.sort()
-    |> Enum.each(fn x -> x * 2 end)
-    d2 = data
-    IO.inspect(d2)
-    exit(self)
-    {:noreply, value}
-  end
-
   def handle_cast({:process, url}) do
     GenServer.cast(:process, url)
   end
 
-  def t1(value) do
-    GenServer.call(__MODULE__, :t1)
-  end
 
-  def queue, do: GenServer.call(__MODULE__, :queue)
-
-  def test, do: GenServer.cast(__MODULE__, :test)
 
   def process(url) do
     {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Simple)
-    r = url
-    |> Enum.map(fn url -> HTTPoison.get(url) end)
-    |> Enum.map(fn {_, result} -> result.body end)
+    {_, body} = url
+    |> HTTPoison.get(url)
+    #|> Enum.map(fn {_, result} -> result.body end)
+
+    r = %{
+        name: get_smoothie_name(body),
+        ingredients: get_smoothie_ingredients(body),
+        directions: get_smoothie_directions(body)
+    }
     @store.add({pid, r})
     #Process.exit(pid, :done)
   end
@@ -60,7 +39,29 @@ defmodule Caller do
   end
 
 
-  def hello() do
-    :world
+  def get_smoothie_name(body) do
+    body
+    |> Floki.parse_document!()
+    #|> Floki.find("div#main-header")
+    |> Floki.find("h1.headline")
+    |> Floki.text()
   end
+
+  def get_smoothie_ingredients(body) do
+    body
+    |> Floki.parse_document!()
+    |> Floki.find("label.checkbox-list")
+    |> Floki.text(sep: "+")
+    |> String.split("+")
+  end
+
+  def get_smoothie_directions(body) do
+    body
+    |> Floki.parse_document!()
+    |> Floki.find("div.paragraph")
+
+    |> Floki.text(sep: "=>")
+    |> String.split("=>")
+  end
+
 end
