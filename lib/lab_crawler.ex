@@ -3,11 +3,9 @@ defmodule LabCrawler do
   Documentation for `LabCrawler`.
   """
 
-
-
-
   def start() do
     :timer.tc(fn -> get_smoothies_recipe() end)
+    #get_smoothies_recipe()
 
   end
 
@@ -38,13 +36,6 @@ defmodule LabCrawler do
     |> Enum.map(fn {_, result} -> result.body end)
   end
 
-  @doc """
-  Allow you to find the name of a smoothie within a page's html body.
-  returns a String.
-  ## Examples
-      iex> Smoothixir.get_smoothie_name(body)
-      "Mongolian Strawberry-Orange Juice Smoothie"
-  """
   def get_smoothie_name(body) do
     body
     |> Floki.parse_document!()
@@ -53,13 +44,6 @@ defmodule LabCrawler do
     |> Floki.text()
   end
 
-  @doc """
-  Allow you to find the ingredients of a smoothie within a page's html body.
-  returns a List of strings.
-  ## Examples
-    iex> Smoothixir.get_smoothie_ingredients(body)
-    ["1 cup chopped fresh strawberries", "1 cup orange juice", "10 cubes ice", "1 tablespoon sugar"]
-  """
   def get_smoothie_ingredients(body) do
     body
     |> Floki.parse_document!()
@@ -92,32 +76,13 @@ defmodule LabCrawler do
   end
 
   def get_smoothies_recipe() do
-    smoothies =
-      get_smoothies_url()
-      |> get_smoothies_html_body()
-      |> Enum.map(fn body ->
-        %{
-          name: get_smoothie_name(body),
-          ingredients: get_smoothie_ingredients(body),
-          directions: get_smoothie_directions(body)
-        }
-      end)
+    {status, urls} = get_smoothies_url()
+    Enum.each(urls, fn u -> Caller.process(u) end)
 
-    {:ok, smoothies}
+    {:created}
   end
 
-  @doc """
-  Simple function that displays smoothies in a nice way in the console.
-  ## Examples
-    iex> Smoothixir.get_smoothies_recipe() |> Smoothixir.display_smoothies()
-    Triple Threat Fruit Smoothie
-    1 kiwi, sliced1 banana, peeled and chopped1/2 cup blueberries1 cup strawberries1 cup ice cubes1/2 cup orange juice1 (8 ounce) container peach yogurt
-    In a blender, blend the kiwi, banana, blueberries, strawberries, ice, orange juice, and yogurt until smooth.
-    +++++++++++++++++++++++++++++
-    Groovie Smoothie
-    2 small bananas, broken into chunks1 cup frozen unsweetened strawberries1 (8 ounce) container vanilla low-fat yogurt3/4 cup milk
-    In a blender, combine bananas, frozen strawberries, yogurt and milk. Blend until smooth. Pour into glasses and serve.
-  """
+
   def display_smoothies({_, smoothies}) do
     smoothies
     #|> Enum.each(fn s -> ResultStore.add(s) end)
@@ -138,15 +103,6 @@ defmodule LabCrawler do
 
 
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> LabCrawler.hello()
-      :world
-
-  """
   def hello do
     IO.inspect(System.get_env("prop"))
     IO.inspect(Application.fetch_env!(:some_app, :key1))

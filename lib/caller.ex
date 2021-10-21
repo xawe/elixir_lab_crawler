@@ -3,12 +3,15 @@ defmodule Caller do
 
   @store  ResultStore
 
+  @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(state) do
-    DynamicSupervisor.start_link(__MODULE__, state)
+    #DynamicSupervisor.start_link(__MODULE__, state)
+    GenServer.start_link(__MODULE__, state)
   end
 
   def init(_init_args) do
-    DynamicSupervisor.init(strategy: :one_for_one)
+    #DynamicSupervisor.init(strategy: :one_for_one)
+    {:ok}
   end
 
   def handle_cast({:process, url}) do
@@ -19,10 +22,8 @@ defmodule Caller do
 
   def process(url) do
     {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Simple)
-    {_, body} = url
-    |> HTTPoison.get(url)
-    #|> Enum.map(fn {_, result} -> result.body end)
-
+    body = Enum.map([url], fn u -> HTTPoison.get(u) end)
+    |> Enum.map(fn {_, result} -> result.body end)
     r = %{
         name: get_smoothie_name(body),
         ingredients: get_smoothie_ingredients(body),

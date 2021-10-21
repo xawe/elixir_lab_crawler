@@ -146,16 +146,4 @@ defmodule Smoothixir do
     {:ok, smoothies}
   end
 
-  @doc """
-  Hello world.
-
-  ## Examples
-
-      iex> Smoothixir.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
 end
