@@ -20,12 +20,29 @@ defmodule Simple do
     {:reply, value, from}
   end
 
+  def handle_cast({:e, value}, _state \\[]) do
+    {:noreply, "#{value} >> OK"}
+  end
+
   def c(value) do
     GenServer.call(__MODULE__, {:c, value})
   end
 
   def d(value) do
     GenServer.call(__MODULE__, {:d, value})
+  end
+
+  def e(value, state \\ []) do
+    IO.inspect("Starting")
+    {_r, id} = DynamicSupervisor.start_child(DynamicCaller, Simple)
+    IO.inspect(id)
+    IO.inspect(Process.alive?(id))
+    r = GenServer.cast(id, {:e, value})
+    Process.exit(id, :sucess)
+    IO.inspect(Process.alive?(id))
+    IO.inspect(state)
+    ResultStore.add(id)
+    r
   end
 
   def one(value) do

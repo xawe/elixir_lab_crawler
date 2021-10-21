@@ -1,6 +1,8 @@
 defmodule Caller do
   use GenServer
 
+  @store  ResultStore
+
   def start_link(state) do
     DynamicSupervisor.start_link(__MODULE__, state)
   end
@@ -30,6 +32,10 @@ defmodule Caller do
     {:noreply, value}
   end
 
+  def handle_cast({:process, url}) do
+    GenServer.cast(:process, url)
+  end
+
   def t1(value) do
     GenServer.call(__MODULE__, :t1)
   end
@@ -37,6 +43,15 @@ defmodule Caller do
   def queue, do: GenServer.call(__MODULE__, :queue)
 
   def test, do: GenServer.cast(__MODULE__, :test)
+
+  def process(url) do
+    {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Simple)
+    r = url
+    |> Enum.map(fn url -> HTTPoison.get(url) end)
+    |> Enum.map(fn {_, result} -> result.body end)
+    @store.add({pid, r})
+    #Process.exit(pid, :done)
+  end
 
   def get_data_from_url(url) do
     url

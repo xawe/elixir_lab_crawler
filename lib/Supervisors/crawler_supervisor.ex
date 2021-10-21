@@ -30,5 +30,13 @@ defmodule Supervisors.CrawlerSupervisor do
     IO.inspect(result)
   end
 
+  def f3() do
+    {_r, id} = DynamicSupervisor.start_child(DynamicCaller, Caller)
+    IO.inspect(id)
+    result = GenServer.call(id, {:get_data, "url Teste"})
+    Process.exit(id, :done)
+    IO.inspect(result)
+  end
+
 
 end
