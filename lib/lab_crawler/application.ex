@@ -8,6 +8,7 @@ defmodule LabCrawler.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      {Supervisors.CrawlerSupervisor, []}
       # Starts a worker by calling: LabCrawler.Worker.start_link(arg)
       # {LabCrawler.Worker, arg}
     ]
