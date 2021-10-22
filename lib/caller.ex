@@ -47,7 +47,6 @@ defmodule Caller do
   def get_smoothie_name(body) do
     body
     |> Floki.parse_document!()
-    #|> Floki.find("div#main-header")
     |> Floki.find("h1.headline")
     |> Floki.text()
   end
@@ -64,7 +63,6 @@ defmodule Caller do
     body
     |> Floki.parse_document!()
     |> Floki.find("div.paragraph")
-
     |> Floki.text(sep: "=>")
     |> String.split("=>")
   end
