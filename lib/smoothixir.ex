@@ -4,11 +4,13 @@ defmodule Smoothixir do
   """
 
   def start() do
+    :timer.tc(fn -> start_process() end)
+  end
+
+  def start_process() do
     Smoothixir.get_smoothies_recipe()
-     |> Smoothixir.store_data()
-     |> Smoothixir.display_smoothies()
-
-
+    |> Smoothixir.store_data()
+    |> Smoothixir.display_smoothies()
   end
 
   def get_smoothies_url() do
