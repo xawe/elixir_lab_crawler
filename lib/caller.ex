@@ -35,8 +35,6 @@ defmodule Caller do
   def process(url) do
     {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Caller)
     GenServer.cast(pid, {:process, url})
-
-    #Process.exit(pid, :done)
   end
 
   def get_data_from_url(url) do
