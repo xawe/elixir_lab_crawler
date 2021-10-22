@@ -9,27 +9,33 @@ defmodule Caller do
     GenServer.start_link(__MODULE__, state)
   end
 
-  def init(_init_args) do
+  def init(init_args) do
     #DynamicSupervisor.init(strategy: :one_for_one)
-    {:ok}
+    {:ok, init_args}
   end
 
-  def handle_cast({:process, url}) do
-    GenServer.cast(:process, url)
+  def handle_cast({:process, url}, _state) do
+    {_, result_data} = HTTPoison.get(url)
+    recipe = %{
+        name: get_smoothie_name(result_data.body),
+        ingredients: get_smoothie_ingredients(result_data.body),
+        directions: get_smoothie_directions(result_data.body)
+    }
+    @store.add(recipe)
+    GenServer.cast(self(), {:terminate})
+    {:noreply, :ok}
   end
 
+  def handle_cast({:terminate}, _) do
+    :timer.sleep(10000)
+    Process.exit(self(), :normal)
+  end
 
 
   def process(url) do
-    {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Simple)
-    body = Enum.map([url], fn u -> HTTPoison.get(u) end)
-    |> Enum.map(fn {_, result} -> result.body end)
-    r = %{
-        name: get_smoothie_name(body),
-        ingredients: get_smoothie_ingredients(body),
-        directions: get_smoothie_directions(body)
-    }
-    @store.add({pid, r})
+    {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Caller)
+    GenServer.cast(pid, {:process, url})
+
     #Process.exit(pid, :done)
   end
 

@@ -1,6 +1,7 @@
 defmodule Simple do
   use GenServer
 
+  @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(state) do
     GenServer.start_link(__MODULE__, state)
     #DynamicSupervisor.start_link(__MODULE__, state)
