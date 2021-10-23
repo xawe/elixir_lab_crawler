@@ -1,21 +1,20 @@
 defmodule Supervisors.CrawlerSupervisor do
   use GenServer
 
-  def start_link(state \\[]) do
+  def start_link(state \\ []) do
     GenServer.start_link(__MODULE__, [])
 
     children = [
-      #Supervisor.child_spec({Caller, [[], Caller01]}, id: :Caller01)
+      # Supervisor.child_spec({Caller, [[], Caller01]}, id: :Caller01)
       {DynamicSupervisor, strategy: :one_for_one, name: DynamicCaller, id: C00}
     ]
+
     Supervisor.start_link(children, name: :CrawlerSupervisor, strategy: :one_for_one)
   end
 
-
   def init(init_arg) do
-  {:ok, init_arg}
+    {:ok, init_arg}
   end
-
 
   def f0() do
     {r, id} = DynamicSupervisor.start_child(DynamicCaller, Caller)
@@ -37,6 +36,4 @@ defmodule Supervisors.CrawlerSupervisor do
     Process.exit(id, :done)
     IO.inspect(result)
   end
-
-
 end

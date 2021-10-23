@@ -4,19 +4,17 @@ defmodule Simple do
   @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(state) do
     GenServer.start_link(__MODULE__, state)
-    #DynamicSupervisor.start_link(__MODULE__, state)
+    # DynamicSupervisor.start_link(__MODULE__, state)
   end
 
   def init(args) do
     {:ok, args}
-    #DynamicSupervisor.init(strategy: :one_for_one)
+    # DynamicSupervisor.init(strategy: :one_for_one)
   end
 
-
-  def handle_cast({:e, value}, _state \\[]) do
+  def handle_cast({:e, value}, _state \\ []) do
     {:noreply, "#{value} >> OK"}
   end
-
 
   def e(value, state \\ []) do
     IO.inspect("Starting")
@@ -30,6 +28,4 @@ defmodule Simple do
     ResultStore.add(id)
     r
   end
-
-
 end

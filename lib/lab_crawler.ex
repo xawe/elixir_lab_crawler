@@ -5,8 +5,7 @@ defmodule LabCrawler do
 
   def start() do
     :timer.tc(fn -> get_smoothies_recipe() end)
-    #get_smoothies_recipe()
-
+    # get_smoothies_recipe()
   end
 
   def get_smoothies_url() do
@@ -30,23 +29,18 @@ defmodule LabCrawler do
     end
   end
 
-
   def get_smoothies_recipe() do
     {status, urls} = get_smoothies_url()
     Enum.each(urls, fn u -> Caller.process(u) end)
     {:created, status}
   end
 
-
-
   def store_data({_, smoothies}) do
     smoothies
     |> Enum.each(fn s -> ResultStore.add(s) end)
+
     {:ok, smoothies}
   end
-
-
-
 
   def hello do
     IO.inspect(System.get_env("prop"))

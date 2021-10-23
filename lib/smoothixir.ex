@@ -50,7 +50,7 @@ defmodule Smoothixir do
   def get_smoothie_name(body) do
     body
     |> Floki.parse_document!()
-    #|> Floki.find("div#main-header")
+    # |> Floki.find("div#main-header")
     |> Floki.find("h1.headline")
     |> Floki.text()
   end
@@ -66,7 +66,7 @@ defmodule Smoothixir do
     body
     |> Floki.parse_document!()
     |> Floki.find("label.checkbox-list")
-    #|> Floki.text()
+    # |> Floki.text()
     # |> Floki.attribute("label", "title")
     |> Floki.text(sep: "+")
     |> String.split("+")
@@ -86,11 +86,9 @@ defmodule Smoothixir do
     |> Floki.parse_document!()
     |> Floki.find("div.paragraph")
 
-    #|> Floki.find("span.recipe-directions__list--item")
+    # |> Floki.find("span.recipe-directions__list--item")
     |> Floki.text(sep: "=>")
     |> String.split("=>")
-
-
   end
 
   def get_smoothies_html_body({_, urls}) do
@@ -130,10 +128,9 @@ defmodule Smoothixir do
     {:ok, smoothies}
   end
 
-
   def display_smoothies({_, smoothies}) do
     smoothies
-    #|> Enum.each(fn s -> ResultStore.add(s) end)
+    # |> Enum.each(fn s -> ResultStore.add(s) end)
     |> Enum.map(fn s ->
       IO.puts(s.name)
       IO.puts(s.ingredients)
@@ -145,7 +142,7 @@ defmodule Smoothixir do
   def store_data({_, smoothies}) do
     smoothies
     |> Enum.each(fn s -> ResultStore.add(s) end)
+
     {:ok, smoothies}
   end
-
 end

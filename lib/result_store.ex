@@ -12,5 +12,4 @@ defmodule ResultStore do
   def all() do
     Agent.get(__MODULE__, & &1)
   end
-
 end
