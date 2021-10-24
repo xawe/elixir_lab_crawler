@@ -4,13 +4,7 @@ defmodule LabCrawler2 do
   """
 
   def start(max_process) do
-    :timer.tc(fn -> get_smoothies_recipe() end)
-    # get_smoothies_recipe()
-  end
-
-  def start_caller_process(max_proces) do
-    Enum.map(1..max_proces, fn _ -> DynamicSupervisor.start_child(DynamicCaller, Caller2) end)
-
+    :timer.tc(fn -> get_smoothies_recipe(max_process) end)
   end
 
 
@@ -35,10 +29,10 @@ defmodule LabCrawler2 do
     end
   end
 
-  def get_smoothies_recipe() do
+  def get_smoothies_recipe(max_process) do
     {status, urls} = get_smoothies_url()
-    Enum.each(urls, fn u -> Caller.process(u) end)
-    {:created, status}
+    Caller2.process(urls, max_process)
+    {:ok}
   end
 
 

@@ -11,7 +11,7 @@ defmodule Caller2 do
 
   def init(init_args) do
     # DynamicSupervisor.init(strategy: :one_for_one)
-    {:ok, init_args, 20_000}
+    {:ok, init_args, 60_000}
   end
 
   def handle_cast({:process, url}, _state) do
@@ -24,9 +24,23 @@ defmodule Caller2 do
     Process.exit(self(), :normal)
   end
 
-  def process(url) do
-    {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Caller)
-    GenServer.cast(pid, {:process, url})
+  def process(url, max_process) do
+    process_list = warmup_process(max_process)
+    spawn_process(url, process_list, [])
+    {:ok, :done}
+  end
+
+  @spec spawn_process(nonempty_maybe_improper_list, any, maybe_improper_list) :: no_return
+  def spawn_process(urls, process_list, remaining_process_list) do
+    [h_url | t_url] = urls
+    {pid, tail_process} = pick_process(process_list, remaining_process_list)
+    GenServer.cast(pid, {:process, h_url})
+    spawn_process(t_url, process_list, tail_process)
+  end
+
+  def spawn_process([] , _, _) do
+    IO.puts("Processos criados com sucesso")
+    {:ok, :done}
   end
 
   @doc """
@@ -34,8 +48,17 @@ defmodule Caller2 do
   """
   def warmup_process(max_process) do
     Enum.map(1..max_process, fn _ -> DynamicSupervisor.start_child(DynamicCaller, Caller2) end)
+    |> Enum.map(fn {_, p} -> p end)
   end
 
+  def pick_process(_process_list, [h | t]) do
+    {h, t}
+  end
+
+  def pick_process(process_list, []) do
+   [h | t ] = process_list
+   {h, t}
+  end
 
 
   def get_data_from_url(url) do
