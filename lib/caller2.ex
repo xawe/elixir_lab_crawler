@@ -29,6 +29,15 @@ defmodule Caller2 do
     GenServer.cast(pid, {:process, url})
   end
 
+  @doc """
+  Inicia uma quantidade pre determinada de processos para tratar as requisições de urls
+  """
+  def warmup_process(max_process) do
+    Enum.map(1..max_process, fn _ -> DynamicSupervisor.start_child(DynamicCaller, Caller2) end)
+  end
+
+
+
   def get_data_from_url(url) do
     url
     |> Enum.map(fn url -> HTTPoison.get(url) end)
