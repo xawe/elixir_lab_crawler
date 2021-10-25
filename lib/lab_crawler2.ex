@@ -4,6 +4,7 @@ defmodule LabCrawler2 do
   """
 
   def start(max_process) do
+    #get_smoothies_recipe(max_process)
     :timer.tc(fn -> get_smoothies_recipe(max_process) end)
   end
 
@@ -32,7 +33,7 @@ defmodule LabCrawler2 do
   def get_smoothies_recipe(max_process) do
     {status, urls} = get_smoothies_url()
     Caller2.process(urls, max_process)
-    {:ok}
+    {:created, status}
   end
 
 

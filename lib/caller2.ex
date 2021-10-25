@@ -31,14 +31,18 @@ defmodule Caller2 do
   end
 
   @spec spawn_process(nonempty_maybe_improper_list, any, maybe_improper_list) :: no_return
-  def spawn_process(urls, process_list, remaining_process_list) do
-    [h_url | t_url] = urls
+  def spawn_process([h_url | t_url] =urls, process_list, remaining_process_list) do
     {pid, tail_process} = pick_process(process_list, remaining_process_list)
     GenServer.cast(pid, {:process, h_url})
     spawn_process(t_url, process_list, tail_process)
   end
 
-  def spawn_process([] , _, _) do
+  def spawn_process(_ , _, _) do
+    IO.puts("Processos criados com sucesso")
+    {:ok, :done}
+  end
+
+  def spawn_process([h_url | []] = urls , _, _) do
     IO.puts("Processos criados com sucesso")
     {:ok, :done}
   end
