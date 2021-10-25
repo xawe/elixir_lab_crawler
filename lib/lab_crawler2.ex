@@ -1,6 +1,6 @@
 defmodule LabCrawler2 do
   @moduledoc """
-  Documentation for `LabCrawler`.
+  Documentation for `LabCrawler2`.
   """
 
   def start(max_process) do
@@ -9,7 +9,7 @@ defmodule LabCrawler2 do
   end
 
 
-  def get_smoothies_url() do
+  def read_main_url() do
     case HTTPoison.get(
            "https://www.allrecipes.com/recipes/138/drinks/smoothies/?internalSource=hubcard&referringContentType=Search&clickId=cardslot%201"
          ) do
@@ -31,7 +31,7 @@ defmodule LabCrawler2 do
   end
 
   def get_smoothies_recipe(max_process) do
-    {status, urls} = get_smoothies_url()
+    {status, urls} = read_main_url()
     Caller2.process(urls, max_process)
     {:created, status}
   end
