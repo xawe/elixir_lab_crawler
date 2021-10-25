@@ -31,18 +31,13 @@ defmodule Caller2 do
   end
 
   @spec spawn_process(nonempty_maybe_improper_list, any, maybe_improper_list) :: no_return
-  def spawn_process([h_url | t_url] =urls, process_list, remaining_process_list) do
+  def spawn_process([h_url | t_url] = urls, process_list, remaining_process_list) do
     {pid, tail_process} = pick_process(process_list, remaining_process_list)
     GenServer.cast(pid, {:process, h_url})
     spawn_process(t_url, process_list, tail_process)
   end
 
   def spawn_process(_ , _, _) do
-    IO.puts("Processos criados com sucesso")
-    {:ok, :done}
-  end
-
-  def spawn_process([h_url | []] = urls , _, _) do
     IO.puts("Processos criados com sucesso")
     {:ok, :done}
   end
@@ -55,10 +50,26 @@ defmodule Caller2 do
     |> Enum.map(fn {_, p} -> p end)
   end
 
+  @doc """
+  Obtem um processo da lista de processos, fazendo uma rotação entre os processos disponíveis
+
+  ## Parameters
+    - _process_list : recebe a lista completa de processos criados para o job
+
+    - [h | t] a lista contendo o Head(processo atual) e Tail(processos restantes da rotação)
+  """
   def pick_process(_process_list, [h | t]) do
     {h, t}
   end
 
+  @doc """
+  Obtem um processo da lista de processos, fazendo uma rotação entre os processos disponíveis
+
+  ## Parameters
+    - process_list : recebe a lista completa de processos criados para o job
+
+    - [] a lista de processos restantes vazia, indicando que a rotação deve ser reiniciada passando o process_list
+  """
   def pick_process(process_list, []) do
    [h | t ] = process_list
    {h, t}
