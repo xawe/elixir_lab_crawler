@@ -16,7 +16,7 @@ defmodule Caller2 do
 
   def handle_cast({:process, url}, _state) do
     HTTPoison.get(url)
-    |> build_recipe()
+    |> WebShredder.AllRecipes.build_recipe()
   end
 
   def handle_cast({:terminate}, _) do
@@ -62,42 +62,11 @@ defmodule Caller2 do
     {h, t}
   end
 
-  @doc """
-  Obtem um processo da lista de processos, fazendo uma rotação entre os processos disponíveis
-
-  ## Parameters
-    - process_list : recebe a lista completa de processos criados para o job
-
-    - [] a lista de processos restantes vazia, indicando que a rotação deve ser reiniciada passando o process_list
-  """
   def pick_process(process_list, []) do
    [h | t ] = process_list
    {h, t}
   end
 
 
-  def get_data_from_url(url) do
-    url
-    |> Enum.map(fn url -> HTTPoison.get(url) end)
-    |> Enum.map(fn {_, result} -> result.body end)
-  end
 
-  def build_recipe({:ok, result_data}) do
-    recipe = %{
-      name: Smoothixir.get_smoothie_name(result_data.body),
-      ingredients: Smoothixir.get_smoothie_ingredients(result_data.body),
-      directions: Smoothixir.get_smoothie_directions(result_data.body)
-    }
-
-    @store.add(recipe)
-
-    IO.puts("--------- || #{inspect(self())} OK || ----------")
-    GenServer.cast(self(), {:terminate})
-    {:noreply, :ok}
-  end
-
-  def build_recipe({_, _}) do
-    IO.puts("--------- #{inspect(self())} NOT PROCESSED ----------")
-    {:noreply, :error}
-  end
 end
