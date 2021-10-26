@@ -1,5 +1,4 @@
 defmodule WebShredder.AllRecipes do
-
   @store ResultStore
 
   def read_main_url() do
@@ -26,7 +25,7 @@ defmodule WebShredder.AllRecipes do
   def get_smoothies_recipe(max_process, fun) do
     {status, urls} = read_main_url()
     fun.(urls, max_process)
-    #Caller2.process(urls, max_process)
+    # Caller2.process(urls, max_process)
     {:created, status}
   end
 
