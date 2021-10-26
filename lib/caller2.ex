@@ -1,8 +1,6 @@
 defmodule Caller2 do
   use GenServer
 
-  @store ResultStore
-
   @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(state) do
     # DynamicSupervisor.start_link(__MODULE__, state)
