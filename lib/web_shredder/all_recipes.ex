@@ -1,4 +1,8 @@
 defmodule WebShredder.AllRecipes do
+  @moduledoc """
+    Responsável por armazenar as funcionalidade de consultas e tratamento de retorno do site Allrecipes.com
+  """
+
   @store ResultStore
 
   def read_main_url() do
