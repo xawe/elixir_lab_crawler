@@ -1,4 +1,4 @@
-defmodule WebShredder.AllRecipes do
+defmodule Web.AllRecipes do
   @moduledoc """
     Responsável por armazenar as funcionalidade de consultas e tratamento de retorno do site Allrecipes.com
   """
@@ -39,6 +39,7 @@ defmodule WebShredder.AllRecipes do
     |> Enum.map(fn {_, result} -> result.body end)
   end
 
+  @spec build_recipe({any, any}) :: {:noreply, :error | :ok}
   def build_recipe({:ok, result_data}) do
     recipe = %{
       name: Smoothixir.get_smoothie_name(result_data.body),

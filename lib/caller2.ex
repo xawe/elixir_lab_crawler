@@ -14,7 +14,7 @@ defmodule Caller2 do
 
   def handle_cast({:process, url}, _state) do
     HTTPoison.get(url)
-    |> WebShredder.AllRecipes.build_recipe()
+    |> Web.AllRecipes.build_recipe()
   end
 
   def handle_cast({:terminate}, _) do
