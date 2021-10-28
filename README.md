@@ -4,7 +4,28 @@
 
 ## Disclaimer
 
-**Este lab foi construido em cima de um tutorial do Julien Corb, onde ele ensina como fazer um simples WebScraping usando HttpPoison e Floki de forma sequencial. Os modulos Smoothixir e AllRecipes são basicamente as implementações mostradas em seu tutorial publicado em https://medium.com/@Jules_Corb/web-scraping-with-elixir-using-httpoison-and-floki-26ebaa03b076 . A leitura do tutorial original é altamente indicada para melhor entendimento da aplicação.**
+**Este lab foi construido em cima de um tutorial do Julien Corb, onde ele demonstra como fazer um simples WebScraping usando HttpPoison e Floki de forma sequencial. Os modulos Smoothixir e AllRecipes são basicamente as implementações mostradas em seu tutorial publicado em https://medium.com/@Jules_Corb/web-scraping-with-elixir-using-httpoison-and-floki-26ebaa03b076 . A leitura do tutorial original é altamente indicada para melhor entendimento da aplicação. O Código original pode ser encontrato em: https://github.com/JulienCorb/Smoothixir**
+
+
+## Resumo
+
+**A execução consiste basicamente em acessar o site AllRecipes.com, listar as receitas de smoothies e consultar cada url de receita para buscar os ingredientes e instruções de preparo.**
+
+
+## Preparação
+
+Execução padrão do Elixir: 
+
+Após ter clonado o diretório:
+
+- 'mix deps.get' para baixar as dependenxias
+
+- 'iex -S mix' para iniciar o shell interativo
+
+- ':observer.start' para monitorar a execução do programa.
+
+
+
 
 ## Installation
 
