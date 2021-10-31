@@ -33,6 +33,13 @@ defmodule Web.AllRecipes do
     {:created, status}
   end
 
+  def get_smoothies_recipe(fun) do
+    {status, urls} = read_main_url()
+    Enum.each(urls, fn url -> fun.(url) end)
+    #fun.(urls)
+    {:created, status}
+  end
+
   def get_data_from_url(url) do
     url
     |> Enum.map(fn url -> HTTPoison.get(url) end)
@@ -47,7 +54,7 @@ defmodule Web.AllRecipes do
       directions: Smoothixir.get_smoothie_directions(result_data.body)
     }
 
-    @store.add(recipe)
+    #@store.add(recipe)
 
     IO.puts("--------- || #{inspect(self())} OK || ----------")
     GenServer.cast(self(), {:terminate})

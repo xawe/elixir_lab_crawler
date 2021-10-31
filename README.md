@@ -18,13 +18,14 @@ Execução padrão do Elixir:
 
 Após ter clonado o diretório:
 
-- 'mix deps.get' para baixar as dependenxias
+- mix deps.get - para baixar as dependenxias
 
-- 'iex -S mix' para iniciar o shell interativo
+- iex -S mix - para iniciar o shell interativo
 
-- ':observer.start' para monitorar a execução do programa.
+- :observer.start - para monitorar a execução do programa.
 
 
+## 1- Execução Sequencial
 
 
 ## Installation

@@ -22,6 +22,11 @@ defmodule Caller2 do
     Process.exit(self(), :normal)
   end
 
+  def process(url) do
+    {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Caller2)
+    GenServer.cast(pid, {:process, url})
+  end
+
   def process(url, max_process) do
     process_list = warmup_process(max_process)
     spawn_process(url, process_list, [])
