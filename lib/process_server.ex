@@ -1,15 +1,13 @@
-defmodule Caller2 do
+defmodule ProcessServer do
   use GenServer
 
   @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
   def start_link(state) do
-    # DynamicSupervisor.start_link(__MODULE__, state)
     GenServer.start_link(__MODULE__, state)
   end
 
   def init(init_args) do
-    # DynamicSupervisor.init(strategy: :one_for_one)
-    {:ok, init_args, 60_000}
+    {:ok, init_args, get_process_timeout()}
   end
 
   def handle_cast({:process, url}, _state) do
@@ -23,7 +21,7 @@ defmodule Caller2 do
   end
 
   def process(url) do
-    {_, pid} = DynamicSupervisor.start_child(DynamicCaller, Caller2)
+    {_, pid} = DynamicSupervisor.start_child(DynamicCaller, ProcessServer)
     GenServer.cast(pid, {:process, url})
   end
 
@@ -49,7 +47,7 @@ defmodule Caller2 do
   Inicia uma quantidade pre determinada de processos para tratar as requisições de urls
   """
   def warmup_process(max_process) do
-    Enum.map(1..max_process, fn _ -> DynamicSupervisor.start_child(DynamicCaller, Caller2) end)
+    Enum.map(1..max_process, fn _ -> DynamicSupervisor.start_child(DynamicCaller, ProcessServer) end)
     |> Enum.map(fn {_, p} -> p end)
   end
 
@@ -68,5 +66,9 @@ defmodule Caller2 do
   def pick_process(process_list, []) do
     [h | t] = process_list
     {h, t}
+  end
+
+  defp get_process_timeout() do
+    Application.fetch_env!(:cfg, :timeout)
   end
 end

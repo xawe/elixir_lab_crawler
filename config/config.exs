@@ -1,6 +1,6 @@
 import Config
 
-config :lab_crawler,
-  max_url_process: 20
+config :cfg,
+  timeout: 40_000
 
 # import_config "#{config_env()}.exs"

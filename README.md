@@ -25,7 +25,20 @@ Após ter clonado o diretório:
 - :observer.start - para monitorar a execução do programa.
 
 
-## 1- Execução Sequencial
+## 1- Execução Sincrona - Sequencial
+
+Para executar o processo sequencialmente:
+
+- Smoothixir.start
+
+
+
+{50793062,
+ [:ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok,
+  :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok,
+  :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok, :ok,
+  :ok, :ok, :ok, ...]}
+
 
 
 ## Installation

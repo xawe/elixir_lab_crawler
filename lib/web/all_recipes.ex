@@ -26,9 +26,9 @@ defmodule Web.AllRecipes do
     end
   end
 
-  def get_smoothies_recipe(max_process, fun) do
+  def get_smoothies_recipe(pool_count, fun) do
     {status, urls} = read_main_url()
-    fun.(urls, max_process)
+    fun.(urls, pool_count)
     # Caller2.process(urls, max_process)
     {:created, status}
   end
