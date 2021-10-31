@@ -1,6 +1,11 @@
 defmodule Web.AllRecipes do
   @moduledoc """
     Expões funções responsáveis por consultar e tratar as informações obtidades no site AllRecipes.com
+
+    A implementação original é de autoria de Julien Corb e pode ser obtida de forma completa no post https://medium.com/@Jules_Corb/web-scraping-with-elixir-using-httpoison-and-floki-26ebaa03b076
+
+    Algumas alterações foram feitas para possibilitar a chamada via processos e corrigir erros causados por alterações no front ent, já que o post original é de 2019
+
   """
 
   @store ResultStore

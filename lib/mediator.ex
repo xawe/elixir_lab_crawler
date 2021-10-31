@@ -1,4 +1,15 @@
 defmodule Mediator do
+  @moduledoc """
+  API resonsável por prover aos modulos WEB as funções necessárias para iniciar o processamento via Processos OTP.
+
+  Atualmente, há duas implementações
+
+  - 1) Um processo é criado para cada URL recebida
+
+  - 2) Um pool de processos é criado com base na quantidade recebida, e então a distribuição de mensagens é feita de forma cíclica
+
+  """
+
   def process(url, url_fun) do
     {_, pid} = DynamicSupervisor.start_child(DynamicCaller, ProcessServer)
     GenServer.cast(pid, {:process, url, url_fun})
@@ -33,10 +44,10 @@ defmodule Mediator do
 
   @doc """
   Obtem um processo da lista de processos, fazendo uma rotação entre os processos disponíveis
-  
+
   ## Parameters
     - _process_list : recebe a lista completa de processos criados para o job
-  
+
     - [h | t] a lista contendo o Head(processo atual) e Tail(processos restantes da rotação)
   """
   def pick_process(_process_list, [h | t]) do
