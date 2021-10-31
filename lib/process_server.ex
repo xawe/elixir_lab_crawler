@@ -1,8 +1,8 @@
 defmodule ProcessServer do
   use GenServer
 
-  @doc """
-  GenServer responsável por tratar
+  @moduledoc """
+  Módulo responsável levantar os processos de execução de url, e prover as funções necessárias para o funcionamento do GenServer
   """
 
   @spec start_link(any) :: :ignore | {:error, any} | {:ok, pid}
@@ -11,20 +11,20 @@ defmodule ProcessServer do
   end
 
   def init(init_args) do
-    {:ok, init_args, get_prop(:cfg, :timeout)}
+    {:ok, init_args, get_prop(:lab_crawler, :timeout)}
   end
 
-  def handle_cast({:process, url}, _state) do
+  def handle_cast({:process, url, url_fun}, _state) do
     HTTPoison.get(url)
-    |> Web.AllRecipes.build_recipe()
+    |> url_fun.()
+
+    # |> Web.AllRecipes.build_recipe()
   end
 
   def handle_cast({:terminate}, _) do
-    :timer.sleep(get_prop(:cfg, :kill_process))
+    :timer.sleep(get_prop(:lab_crawler, :kill_process))
     Process.exit(self(), :normal)
   end
-
-
 
   defp get_prop(key, prop_name) do
     Application.fetch_env!(key, prop_name)

@@ -1,6 +1,9 @@
 defmodule Smoothixir do
   @moduledoc """
-  Documentation for `Smoothixir`.
+  Documentation for `Smoothixir` - A implementação original é de autoria de Julien Corb e pode ser obtida de forma completa no post https://medium.com/@Jules_Corb/web-scraping-with-elixir-using-httpoison-and-floki-26ebaa03b076.
+
+  Alguams correções foram feitas devido alteração no FrontEnd do site AllRecipes, quebrando o funcionamento da versão original
+
   """
 
   def start() do
