@@ -1,6 +1,6 @@
 defmodule Web.AllRecipes do
   @moduledoc """
-    Responsável por armazenar as funcionalidade de consultas e tratamento de retorno do site Allrecipes.com
+    Expões funções responsáveis por consultar e tratar as informações obtidades no site AllRecipes.com
   """
 
   @store ResultStore
@@ -29,14 +29,12 @@ defmodule Web.AllRecipes do
   def get_smoothies_recipe(pool_count, fun) do
     {status, urls} = read_main_url()
     fun.(urls, pool_count)
-    # Caller2.process(urls, max_process)
     {:created, status}
   end
 
   def get_smoothies_recipe(fun) do
     {status, urls} = read_main_url()
     Enum.each(urls, fn url -> fun.(url) end)
-    #fun.(urls)
     {:created, status}
   end
 
@@ -54,7 +52,7 @@ defmodule Web.AllRecipes do
       directions: Smoothixir.get_smoothie_directions(result_data.body)
     }
 
-    #@store.add(recipe)
+    @store.add(recipe)
 
     IO.puts("--------- || #{inspect(self())} OK || ----------")
     GenServer.cast(self(), {:terminate})

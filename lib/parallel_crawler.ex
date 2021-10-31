@@ -54,8 +54,7 @@ A execução será dividida em duas etapas
   EX : Se forem iniciados 5 processos, a aplicação requisitará 5 urls e aguardará o retorno antes de seolicitar mais 5.
   Isso causará menos consumo de recursos e aumentará o tempo de processamento
 
-  Se forem iniciados 40 processos, serão 40 get de urls ao mesmo tempo, consumindo mais recursos para tratar a string de conteudo
-  e maximizando o consumo de banda.
+  Se forem iniciados 40 processos(40 get de urls ao mesmo tempo), o consumo de recursos aumentará, mas garantira o máximo de utilização de banda.
   """
   def run_pool(pool_count) do
     Web.AllRecipes.get_smoothies_recipe(pool_count, &ProcessServer.process/2)
@@ -81,8 +80,7 @@ A execução será dividida em duas etapas
   EX : Se forem iniciados 5 processos, a aplicação requisitará 5 urls e aguardará o retorno antes de seolicitar mais 5.
   Isso causará menos consumo de recursos e aumentará o tempo de processamento
 
-  Se forem iniciados 40 processos, serão 40 get de urls ao mesmo tempo, consumindo mais recursos para tratar a string de conteudo
-  e maximizando o consumo de banda.
+  Se forem iniciados 40 processos(40 get de urls ao mesmo tempo), o consumo de recursos aumentará, mas garantira o máximo de utilização de banda.
 
   """
   def run_pool_monitor(pool_count) do
