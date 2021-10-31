@@ -1,6 +1,6 @@
 import Config
 
-config :cfg,
+config :lab_crawler,
   timeout: 40_000,
   kill_process: 10_000
 
