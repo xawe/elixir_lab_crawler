@@ -20,7 +20,7 @@ A execução será dividida em duas etapas
   O Consumo de CPU e Memória será elevado, já que o processamendo do resultado poderá serializar um volume considerável de texto
   """
   def run_1x1() do
-    Web.AllRecipes.get_smoothies_recipe(&ProcessServer.process/1)
+    Web.AllRecipes.get_smoothies_recipe(&Mediator.process/1)
   end
 
   @doc """
@@ -33,7 +33,7 @@ A execução será dividida em duas etapas
   O Consumo de CPU e Memória será elevado, já que o processamendo do resultado poderá serializar um volume considerável de texto
   """
   def run_1x1_monitor() do
-    :timer.tc(fn -> Web.AllRecipes.get_smoothies_recipe(&ProcessServer.process/1) end)
+    :timer.tc(fn -> Web.AllRecipes.get_smoothies_recipe(&Mediator.process/1) end)
   end
 
   @doc """
@@ -57,7 +57,7 @@ A execução será dividida em duas etapas
   Se forem iniciados 40 processos(40 get de urls ao mesmo tempo), o consumo de recursos aumentará, mas garantira o máximo de utilização de banda.
   """
   def run_pool(pool_count) do
-    Web.AllRecipes.get_smoothies_recipe(pool_count, &ProcessServer.process/2)
+    Web.AllRecipes.get_smoothies_recipe(pool_count, &Mediator.process/2)
   end
 
   @doc """
@@ -86,7 +86,7 @@ A execução será dividida em duas etapas
   def run_pool_monitor(pool_count) do
     # get_smoothies_recipe(max_process)
     :timer.tc(fn ->
-      Web.AllRecipes.get_smoothies_recipe(pool_count, &ProcessServer.process/2)
+      Web.AllRecipes.get_smoothies_recipe(pool_count, &Mediator.process/2)
     end)
   end
 
