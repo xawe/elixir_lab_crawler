@@ -1,5 +1,6 @@
 defmodule ResultStore do
   use Agent
+
   @moduledoc """
   Processo Supervisionado utilizado para armazenamento do resultado obtido no processamento das Urls
 
