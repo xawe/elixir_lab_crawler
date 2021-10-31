@@ -7,7 +7,7 @@ defmodule ProcessServer do
   end
 
   def init(init_args) do
-    {:ok, init_args, get_process_timeout()}
+    {:ok, init_args, get_prop(:cfg, :timeout)}
   end
 
   def handle_cast({:process, url}, _state) do
@@ -16,7 +16,8 @@ defmodule ProcessServer do
   end
 
   def handle_cast({:terminate}, _) do
-    :timer.sleep(15_000)
+    :timer.sleep(get_prop(:cfg, :kill_process))
+    IO.puts("Terminating ---- #{inspect self()}")
     Process.exit(self(), :normal)
   end
 
@@ -25,6 +26,7 @@ defmodule ProcessServer do
     GenServer.cast(pid, {:process, url})
   end
 
+  @spec process(any, any) :: none
   def process(url, max_process) do
     process_list = warmup_process(max_process)
     spawn_process(url, process_list, [])
@@ -68,7 +70,7 @@ defmodule ProcessServer do
     {h, t}
   end
 
-  defp get_process_timeout() do
-    Application.fetch_env!(:cfg, :timeout)
+  defp get_prop(key, prop_name) do
+    Application.fetch_env!(key, prop_name)
   end
 end
