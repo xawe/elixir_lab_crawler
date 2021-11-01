@@ -96,7 +96,7 @@ O Fluxo de execução será:
 
 ### Observações
 
-Ainda não está disponível um monitor de tempo de execução do fluxo assincrono. Dessa forma, é possível medir visualmente a variação nos resultados usando o :observer.start. 
+Ainda não está disponível um monitor de tempo de execução do fluxo assincrono. Dessa forma, é possível medir visualmente a variação nos resultados usando o `:observer.start`. 
 
 ## ......... PENDENTE ...........
 
