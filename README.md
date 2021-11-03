@@ -98,7 +98,9 @@ O Fluxo de execução será:
 
 Ainda não está disponível um monitor de tempo de execução do fluxo assincrono. Dessa forma, é possível medir visualmente a variação nos resultados usando o `:observer.start`. 
 
-## ......... PENDENTE ...........
+## DOCS
+
+Execute `mix docs` para gerar a documentação no diretório `doc` do projeto
 
 ## Installation
 
