@@ -108,6 +108,9 @@ as seguintes funções estão disponiveis:
 
 - 2) `ResultStore.clean/0` - Limpa todo o conteudo armazenado no resultStore 
 
+Como o Agent é persistente e o volume de texto pode ser consideravel, é possível que depois de muitas chamadas esse processo possa estar usando uma quantidade consideravel de memória para armazenar os resultados. Para esses casos, é recomendado persistir esses resutados em arquivo ou banco de dados.
+
+
 ### Insights
 
 Atualmente, ao executar módulo ParallelCrawler para iniciar um processo, estamos apenas utilizando um SintaxSugar para a execução do módulo Web.AllRecipes, responsável pelas chamadas aos links, tratamento do conteudo retornado, etc.
