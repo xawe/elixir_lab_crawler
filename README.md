@@ -96,7 +96,32 @@ O Fluxo de execução será:
 
 ### Observações
 
-Ainda não está disponível um monitor de tempo de execução do fluxo assincrono. Dessa forma, é possível medir visualmente a variação nos resultados usando o `:observer.start`. 
+- Utilize  `:observer.start` para monitorar a execução dos processos, consumo de recurso e tempo de execução do fluxo assincrono.
+
+### Resultados
+
+Assim que cada processo finaliza a chamada de uma URL, ele envia o resultado obtido para um processo Agent supervisionado único chamado ResultStore.
+
+as seguintes funções estão disponiveis:
+
+- 1) `ResultStore.all/0` - Devolve uma lista com todos os itens já processados.
+
+- 2) `ResultStore.clean/0` - Limpa todo o conteudo armazenado no resultStore 
+
+### Insights
+
+Atualmente, ao executar módulo ParallelCrawler para iniciar um processo, estamos apenas utilizando um SintaxSugar para a execução do módulo Web.AllRecipes, responsável pelas chamadas aos links, tratamento do conteudo retornado, etc.
+
+Web.AllRecipes em si, utiliza o Modulo Mediator através das funções Mediator.process/2 e Mediator.process/3, responsável por controlar como os processos serão criados usando o módulo ProcessServer. Ambos os modulos não conhecem os detalhes das chamadas que serão executadas através dos processos. Dessa forma quanto o Mediator é chamado pelo módulo AllRecipes, ele recebe do AllRecipes um parametro que é a função Web.AllRecipes.build_recipe/1, repassada para cada um dos processos a serem criados.
+
+Com esse modelo, os Módulos Mediator e ProcessServer são completamente desacoplados das regras presentes no Web.AllRecipes e, portanto, eles podem ser utilizados para qualquer nova implementação de scraping, bastando para isso criar um novo módulo Seguindo o padrão apresentado no AllRecipes
+
+Os únicos requisitos para isso são:
+
+- 1) Fazer a chamada para as funções &Mediator.process/2 (resonsável por criar um processo para cada URL a ser processada) ou &Mediator.process/3 ( Responsável por distribuir as urls em um pool de processos criados a partir do parametro quantidade da função &Mediator.process/3)
+
+- 2) Mas funções Mediator.process/2 e Mediator.process/3, informar a função de callback que será executada pelos processos criados.
+
 
 ## DOCS
 

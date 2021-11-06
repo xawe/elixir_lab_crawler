@@ -33,15 +33,15 @@ defmodule Web.AllRecipes do
     end
   end
 
-  def get_smoothies_recipe(pool_count, fun) do
+  def get_smoothies_recipe(pool_count) do
     {status, urls} = read_main_url()
-    fun.(urls, pool_count, @url_call_function)
+    Mediator.process(urls, pool_count, @url_call_function)
     {:created, status}
   end
 
-  def get_smoothies_recipe(fun) do
+  def get_smoothies_recipe() do
     {status, urls} = read_main_url()
-    Enum.each(urls, fn url -> fun.(url, @url_call_function) end)
+    Enum.each(urls, fn url -> Mediator.process(url, @url_call_function) end)
     {:created, status}
   end
 
