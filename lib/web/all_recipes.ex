@@ -54,9 +54,9 @@ defmodule Web.AllRecipes do
   @spec build_recipe({any, any}) :: {:noreply, :error | :ok}
   def build_recipe({:ok, result_data}) do
     recipe = %{
-      name: Smoothixir.get_smoothie_name(result_data.body),
-      ingredients: Smoothixir.get_smoothie_ingredients(result_data.body),
-      directions: Smoothixir.get_smoothie_directions(result_data.body)
+      name: get_smoothie_name(result_data.body),
+      ingredients: get_smoothie_ingredients(result_data.body),
+      directions: get_smoothie_directions(result_data.body)
     }
 
     @store.add(recipe)
@@ -69,5 +69,62 @@ defmodule Web.AllRecipes do
   def build_recipe({_, _}) do
     IO.puts("--------- #{inspect(self())} NOT PROCESSED ----------")
     {:noreply, :error}
+  end
+
+  def smoothies_html_body({_, urls}) do
+    urls
+    |> Enum.map(fn url -> HTTPoison.get(url) end)
+    |> Enum.map(fn {_, result} -> result.body end)
+  end
+
+  @doc """
+  Allow you to find the name of a smoothie within a page's html body.
+  returns a String.
+  ## Examples
+      iex> Smoothixir.get_smoothie_name(body)
+      "Mongolian Strawberry-Orange Juice Smoothie"
+  """
+  def get_smoothie_name(body) do
+    body
+    |> Floki.parse_document!()
+    # |> Floki.find("div#main-header")
+    |> Floki.find("h1.headline")
+    |> Floki.text()
+  end
+
+  @doc """
+  Allow you to find the ingredients of a smoothie within a page's html body.
+  returns a List of strings.
+  ## Examples
+    iex> Smoothixir.get_smoothie_ingredients(body)
+    ["1 cup chopped fresh strawberries", "1 cup orange juice", "10 cubes ice", "1 tablespoon sugar"]
+  """
+  def get_smoothie_ingredients(body) do
+    body
+    |> Floki.parse_document!()
+    |> Floki.find("label.checkbox-list")
+    # |> Floki.text()
+    # |> Floki.attribute("label", "title")
+    |> Floki.text(sep: "+")
+    |> String.split("+")
+  end
+
+  @doc """
+  Allow you to find the directions of a smoothie within a page's html body.
+  returns an Array of Strings.
+  ## Examples
+    iex> Smoothixir.get_smoothie_directions(body)
+    ["In a blender, combine strawberries, orange juice, ice cubes and sugar. Blend until smooth. Pour into glasses and serve."]
+  """
+  def get_smoothie_directions(body) do
+    # |> Floki.parse_document!()
+    # |> Floki.find("label.checkbox-list")
+    body
+    |> Floki.parse_document!()
+    |> Floki.find("div.paragraph")
+
+    # |> Floki.find("span.recipe-directions__list--item")
+    |> Floki.text(sep: "=>")
+    |> String.split("=>")
   end
 end
